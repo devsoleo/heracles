@@ -1,6 +1,6 @@
 function array_search(array, value)
 	local index = {}
-  
+
 	for k, v in pairs(array) do
 		index[v] = k
 	end
@@ -59,7 +59,7 @@ function clear_table(table)
 	if table == nil then
 		return nil
 	end
-	
+
 	for k in pairs(table) do
 		table[k] = nil
 	end

@@ -19,9 +19,9 @@ function B_StopEvent_OnClick(self)
 end
 
 function B_KeyApply_OnClick(self)
-    displayMissions(EB_EventKey:GetText())
+    displayMissions(parseEventKey(EB_EventKey:GetText()))
 
-    set_storage("event_key", EB_EventKey:GetText())
+    --  set_storage("event_key", EB_EventKey:GetText())
 end
 
 function B_SendAlertToPlayers_OnClick(self)
@@ -29,40 +29,93 @@ function B_SendAlertToPlayers_OnClick(self)
 end
 
 function displayParticipants()
-
     displayList(SF_ParticipantsList, _G["participants"])
 end
 
-function displayMissions(eventKey)
+function parseEventKey(eventKey)
     if eventKey == nil or eventKey == "" then
         print("[ADMIN] Clé vide !")
 
         return
     end
-    
-    local missionsList = str_split(eventKey, "_")
 
-    local mod = function(l, i)
-        -- Définit le texte avec le nom du joueur en rose et le reste en couleur standard*$
-        local key = missionsList[i]
-        local splited_key = str_split(key, "-")
+    eventKey = url_decode(base64_decode(eventKey))
 
-        local m_type = splited_key[1]
-        local text = ""
+    local event = {}
 
-        if (m_type == "T") then
-            text = "Tuer |c000fff00x" .. splited_key[2] .. " " .. splited_key[3] .. "|r"
-        elseif (m_type == "C") then 
-            text = "Cibler |c000fff00" .. splited_key[2]
-        elseif (m_type == "P") then
-            text = "Posséder |c000fff00x" .. splited_key[2] .. " " .. splited_key[3]
+    local splitedEventKey = str_split_brackets(eventKey)
+
+    local headers = splitedEventKey[1]
+    local missions = splitedEventKey[2]
+
+    local headersList = str_split(headers, ";")
+    local missionsList = str_split(missions, ";")
+
+    -- Traitement des headers
+    event["headers"] = {}
+
+    local langHeader = str_split(headersList[1], "|")
+    local langId = 1 -- enUS en langue par défaut
+
+    for i, text in ipairs(langHeader) do
+        if text == GetLocale() then
+            langId = i
         end
+    end
 
+    event["headers"]["lang"] = langId
+    event["headers"]["version"] = headersList[2]
+
+    -- Traitement des headers
+    event["missions"] = {}
+
+    for i, m in ipairs(missionsList) do
+        local mission = str_split(m, "|")
+
+        event["missions"][i] = {}
+        event["missions"][i]["args"] = {}
+        event["missions"][i]["type"] = mission[1]
+
+        for j, v in ipairs(mission) do
+            if (j ~= 1) then
+                event["missions"][i]["args"][j - 1] = v
+            end
+        end
+    end
+
+    return event
+end
+
+function displayMissions(event)
+    -- Traitement des missions
+    local mod = function(l, i)
+        -- Définit le texte avec le nom du joueur en rose et le reste en couleur standard
+        local text = ""
+        local langId = event["headers"]["lang"]
+        local m_type = event["missions"][i]["type"]
+        local splited_key = event["missions"][i]["args"]
+
+        -- 1 + arg_id + lang_id
+        if (m_type == "K") then
+            text = "Kill |c000fff00x" .. splited_key[1] .. " " .. splited_key[1 + langId] .. "|r"
+        elseif (m_type == "T") then
+            if (array_size(splited_key) == 2) then -- Si c'est un player name
+                text = "Target |c000fff00" .. splited_key[1]
+            else
+                text = "Target |c000fff00" .. splited_key[langId]
+            end
+        elseif (m_type == "G") then
+            text = "Go to |c000fff00" .. splited_key[langId]
+        end
 
         l:SetText(text)
     end
 
-    displayList(SF_MissionsList, missionsList, mod)
+    local r = {}
+
+    for i = 1, sizeof(event["missions"]) do r[i] = "" end
+
+    displayList(SF_MissionsList, r, mod)
     -- print("[ADMIN] Missions ajoutées !")
 end
 
@@ -75,6 +128,23 @@ function displayList(sf_element, values, modifier)
     local scrollChild = sf_element:GetScrollChild()
     scrollChild.contentHeight = 0
 
+    -- Supprime les lignes précédentes
+    local i = 1
+
+    while true do
+        local line_name = "FS_" .. SF_MissionsList:GetName():sub(4) .. "Item" .. i
+        local line = _G[line_name]
+
+        if (line == nil) then
+            break
+        else
+            line:SetText("")
+        end
+
+        i = i + 1
+    end
+
+    -- Ajoute les nouvelles lignes
     for i, text in ipairs(values) do
         local line_name = "FS_" .. sf_element:GetName():sub(4) .. "Item" .. i
         local line = _G[line_name]
@@ -85,7 +155,6 @@ function displayList(sf_element, values, modifier)
 
         line:SetParent(sf_element)
 
-        print(line_name)
         -- Crée une nouvelle ligne de texte
         local yPos = -scrollChild.contentHeight - 5
         line:SetPoint("TOPLEFT", scrollChild, "TOPLEFT", 5, yPos)

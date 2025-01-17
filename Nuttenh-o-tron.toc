@@ -4,6 +4,10 @@
 ## Author: Soleo, Aniwen
 ## SavedVariablesPerCharacter: NOTSVPC
 
+# libs
+libs\url.lua
+libs\base64.lua
+
 # functions
 functions\string_fn.lua
 functions\array_fn.lua

@@ -25,6 +25,15 @@ function trim(s)
    return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
+function str_split_brackets(input)
+    local result = {}
+    -- Utiliser gmatch pour capturer tout ce qui est entre [ et ]
+    for block in input:gmatch("%[(.-)%]") do
+        table.insert(result, block)
+    end
+    return result
+end
+
 -- Exemple d'utilisation
 
 function chiffre(texte)
@@ -44,7 +53,7 @@ function chiffre(texte)
 end
 
 function dechiffre(texteChiffre)
-    local cle = "maCleZecret"
+    local cle = "maCleSecrete"
 
     local dechiffre = ""
     local longueurCle = #cle
