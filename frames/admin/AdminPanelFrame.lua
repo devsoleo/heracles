@@ -36,6 +36,11 @@ end
 
 function B_SendAlertToPlayers_OnClick(self)
     print("Button " .. self:GetName() .. " is pressed with input : " .. EB_AlertToPlayers:GetText())
+
+    for i, p in ipairs(NOTSVPC["participants"]) do
+        SendAddonMessage(PREFIX, "alert|" .. EB_AlertToPlayers:GetText(), "WHISPER", p) -- TODO : Verifier cooldown
+    end
+
     EB_AlertToPlayers:SetText("")
 end
 

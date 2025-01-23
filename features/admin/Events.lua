@@ -50,8 +50,11 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
         return
     end
 
+    local splitedMessage = str_split(message, "|")
+    local messageType = splitedMessage[1]
+
     -- VERIFIER SI LE JOUEUR A ETE INVITE EN VERIFIANT SI IL CORRESPOND AU FILTRES
-    if (message == "accept_invite") then
+    if (messageType == "accept_invite") then
         if checkInvitationAccept(sender) == false then
             -- Ce joueur n'a pas été invité
             return
