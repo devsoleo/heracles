@@ -227,7 +227,7 @@
 			<OnShow>
 				getInviteForm()
 				InviteFrame_ClearList()
-				displayInviteList()
+				InviteFrame_DisplayInviteList()
 			</OnShow>
 		</Scripts>
 		<Backdrop bgFile="Interface\FriendsFrame\UI-Toast-Background" edgeFile="Interface\FriendsFrame\UI-Toast-Border">

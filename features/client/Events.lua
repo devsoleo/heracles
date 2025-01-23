@@ -8,13 +8,14 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
         return
     end
 
-    -- Same invite
-    if (message == "invite") then
-        if (lastInvite <= time() - 2) then
-            local message = sender .. " vous invite à participer à son event !"
+    local splitedMessage = str_split(message, "|")
+    local messageType = splitedMessage[1]
 
+    -- Same invite
+    if (messageType == "invite") then
+        if (lastInvite <= time() - 2) then
             StaticPopupDialogs["NEW_INVITE"] = {
-                text = message,
+                text = sender .. " vous invite à participer à son event !",
                 button1 = "Accepter",
                 button2 = "Refuser",
                 OnAccept = function()
@@ -29,8 +30,19 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
 
             StaticPopup_Show("NEW_INVITE")
         end
-    elseif (message == "close_invite") then
+    elseif (messageType == "close_invite") then
         StaticPopup_Hide("NEW_INVITE")
+    elseif (messageType == "alert") then
+        StaticPopupDialogs["ALERT"] = {
+            text = splitedMessage[2],
+            button1 = "Fermer",
+            timeout = 60,
+            whileDead = true,
+            hideOnEscape = true,
+            preferredIndex = 3,
+        }
+
+        StaticPopup_Show("ALERT")
     end
 
     lastInvite = time()
