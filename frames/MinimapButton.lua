@@ -20,7 +20,6 @@ function NOT_MinimapButtonUnbound_Reposition()
 end
 
 function NOT_MinimapButton_DraggingFrame_OnUpdate()
-
 	local xpos,ypos = GetCursorPosition()
 	local xmin,ymin = Minimap:GetLeft(), Minimap:GetBottom()
 

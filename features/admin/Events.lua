@@ -53,14 +53,14 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
     -- VERIFIER SI LE JOUEUR A ETE INVITE EN VERIFIANT SI IL CORRESPOND AU FILTRES
     if (message == "accept_invite") then
         if checkInvitationAccept(sender) == false then
-            print("PAS INVITE")
+            -- Ce joueur n'a pas été invité
             return
         end
 
         print("[ADMIN] " .. sender .. " a accepté votre invitation !")
 
         -- Add player to the event player list
-        table.insert(_G["participants"], sender)
+        table.insert(NOTSVPC["participants"], sender)
 
         displayParticipants()
     end

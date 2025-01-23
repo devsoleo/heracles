@@ -14,6 +14,7 @@ functions\array_fn.lua
 functions\player_fn.lua
 functions\guild_fn.lua
 functions\storage_fn.lua
+functions\ui_fn.lua
 
 # features : admin
 features\admin\Commands.lua

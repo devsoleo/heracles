@@ -130,18 +130,29 @@
 				<Anchors>
 					<Anchor x="41" y="-55" point="BOTTOM" relativeTo="B_StartEvent" />
 				</Anchors>
+				<Scripts>
+					<OnEnterPressed>
+						B_SendAlertToPlayers_OnClick(self)
+					</OnEnterPressed>
+				</Scripts>
 			</EditBox>
-			<EditBox name="EB_EventKey" inherits="InputBoxTemplate">
+			<EditBox name="EB_EventKey" inherits="InputBoxTemplate" autoFocus="false">
 				<Size x="166" y="32" />
 				<Anchors>
 					<Anchor y="-28" point="BOTTOMLEFT" relativeTo="FS_EventKeyTitle" />
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						if get_storage("event_key") then
-							self:SetText(get_storage("event_key"))
+						-- TODO : Remove this line later
+						self:SetText("JTVCZW5VUyU3Q2ZyRlIlN0Nlc0VTJTdDZGVERSUzQjIuMC4wJTVEJTVCSyU3QzElN0NLb2JvbGQlMjBWZXJtaW4lN0NWZXJtaW5lJTIwa29ib2xkJTdDQWxpbWElQzMlQjFhJTIwayVDMyVCM2JvbGQlN0NLb2JvbGRnZXolQzMlQkNjaHQlM0JUJTdDRmxlc2glMjBFYXRlciU3Q0QlQzMlQTl2b3JldXIlN0NDb21lY2FybmVzJTdDRmxlaXNjaGZyZXNzZXIlM0JHJTdDU3Rvcm13aW5kJTIwQ2l0eSU3Q0h1cmxldmVudCU3Q0NpdWRhZCUyMGRlJTIwVmVudG9ybWVudGElN0NTdHVybXdpbmQlN0NUcmFkZSUyMERpc3RyaWN0JTdDUXVhcnRpZXIlMjBjb21tZXIlQzMlQTdhbnQlN0NEaXN0cml0byUyMGRlJTIwTWVyY2FkZXJlcyU3Q0hhbmRlbHNkaXN0cmlrdCU1RA==")
+
+						if NOTSVPC["event_key"] then
+							-- self:SetText(NOTSVPC["event_key"])
 						end
 					</OnShow>
+					<OnEnterPressed>
+						B_KeyApply_OnClick(self)
+					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
 			<Button name="B_KeyApply" inherits="UIPanelButtonTemplate" text="Appliquer">
@@ -181,11 +192,6 @@
 			<EdgeSize val="12" />
 		</Backdrop>
 		<Scripts>
-			<OnLoad>
-				if _G["participants"] == nil then
-					_G["participants"] = {}
-				end
-			</OnLoad>
 			<OnShow>
 				local scrollChild = CreateFrame("Frame", "$parentScrollChild", self)
 				self:SetScrollChild(scrollChild)
@@ -216,7 +222,7 @@
 				scrollChild:SetSize(180, 1)
 				scrollChild.contentHeight = 0
 
-				displayMissions(get_storage("event_key"))
+				-- displayMissions(NOTSVPC["event_key"])
 			</OnShow>
 		</Scripts>
 	</ScrollFrame>

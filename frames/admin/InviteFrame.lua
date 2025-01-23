@@ -1,4 +1,11 @@
-function toggleInviteSubmitButton()
+-- Functions
+function InviteFrame_ClearList()
+    UI_ClearList("FS_InvitedPlayerListItem")
+
+    InviteFrame_ToggleSubmitButton()
+end
+
+function InviteFrame_ToggleSubmitButton()
     if (isInviteFormEmpty(getInviteForm()) == false) then
         B_SubmitInvites:Enable()
     else
@@ -6,8 +13,29 @@ function toggleInviteSubmitButton()
     end
 end
 
+
+function InviteFrame_AddPlayerToInviteList(player)
+    player = normalizePlayerName(player)
+
+    -- On vérifie que le joueur n'est pas déjà dans la liste
+    -- On vérifie que le joueur n'est pas le joueur lui-même
+    -- On vérifie que le joueur n'est pas vide
+    if (player == nil or array_search(NOTSVPC["invites"]["players"], player) ~= nil or player == UnitName("PLAYER")) then
+        return false
+    end
+
+    table.insert(NOTSVPC["invites"]["players"], player)
+
+    displayInviteList()
+
+    InviteFrame_ToggleSubmitButton()
+
+    return true
+end
+
+-- Events
 function CB_GuildPlayers_OnClick(self)
-    toggleInviteSubmitButton()
+    InviteFrame_ToggleSubmitButton()
 end
 
 function CB_RaidPlayers_OnClick(self)
@@ -19,15 +47,15 @@ function CB_RaidPlayers_OnClick(self)
         CB_PartyPlayers:Enable()
     end
 
-    toggleInviteSubmitButton()
+    InviteFrame_ToggleSubmitButton()
 end
 
 function CB_PartyPlayers_OnClick(self)
-    toggleInviteSubmitButton()
+    InviteFrame_ToggleSubmitButton()
 end
 
 function B_PlayerNameToInviteList_OnClick(self)
-    if (addPlayerToInviteList(EB_InvitedPlayerName:GetText())) then
+    if (InviteFrame_AddPlayerToInviteList(EB_InvitedPlayerName:GetText())) then
         EB_InvitedPlayerName:SetText("")
         EB_InvitedPlayerName:ClearFocus()
     end
@@ -35,7 +63,7 @@ end
 
 function B_TargetToInviteList_OnClick(self)
     if (UnitName("target") ~= nil and UnitIsPlayer("target") == 1) then
-        addPlayerToInviteList(UnitName("target"))
+        InviteFrame_AddPlayerToInviteList(UnitName("target"))
     end
 end
 
@@ -45,30 +73,10 @@ end
 
 function B_SubmitInvites_OnClick(self)
     if (sendInvites(getInviteForm(), EB_InvitedPlayerName:GetText())) then
+        NOTSVPC["hasInvited"] = true
+
         F_Invite:Hide()
         F_AdminPanel:Show()
-
-        set_storage("invites", _G["invites"])
         -- displayMissions(str_split("T-5-Zgurt le maléfique_C-Soleo_P-1-Chauve", "_"))
     end
-end
-
-function addPlayerToInviteList(player)
-    player = normalizePlayerName(player)
-
-    -- On vérifie que le joueur n'est pas déjà dans la liste
-    -- On vérifie que le joueur n'est pas le joueur lui-même
-    -- On vérifie que le joueur n'est pas vide
-    if (player == nil or array_search(_G["invites"]["players"], player) ~= nil or player == UnitName("PLAYER")) then
-        return false
-    end
-
-    -- invites["players"][#invites["players"] + 1] = player
-    table.insert(_G["invites"]["players"], player)
-
-    displayInviteList()
-
-    toggleInviteSubmitButton()
-
-    return true
 end

@@ -191,7 +191,8 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						clearInviteList()
+						reset_storage()
+						InviteFrame_ClearList()
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\BUTTONS\CancelButton-Up" />
@@ -225,6 +226,7 @@
 			</OnLoad>
 			<OnShow>
 				getInviteForm()
+				InviteFrame_ClearList()
 				displayInviteList()
 			</OnShow>
 		</Scripts>
