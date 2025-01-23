@@ -1,25 +1,16 @@
-_G["invites"] = {}
-_G["invites"]["channels"] = {}
-_G["invites"]["players"] = {}
-
--- On réinitialise la sélection
-_G["invites"]["channels"]["GUILD"] = false
-_G["invites"]["channels"]["RAID"] = false
-_G["invites"]["channels"]["PARTY"] = false
-
 function displayInviteList()
-    if not _G["invites"] or not _G["invites"]["players"] then
+    if not NOTSVPC["invites"] or not NOTSVPC["invites"]["players"] then
         return
     end
 
-    displayList(SF_InvitedPlayerList, _G["invites"]["players"])
+    displayList(SF_InvitedPlayerList, NOTSVPC["invites"]["players"])
 end
 
 function getInviteForm()
     -- On récupère le channels sélectionnés
-    _G["invites"]["channels"]["GUILD"] = (CB_GuildPlayers:GetChecked() == 1)
-    _G["invites"]["channels"]["RAID"] = (CB_RaidPlayers:GetChecked() == 1)
-    _G["invites"]["channels"]["PARTY"] = ( CB_PartyPlayers:GetChecked() == 1)
+    NOTSVPC["invites"]["channels"]["GUILD"] = (CB_GuildPlayers:GetChecked() == 1)
+    NOTSVPC["invites"]["channels"]["RAID"] = (CB_RaidPlayers:GetChecked() == 1)
+    NOTSVPC["invites"]["channels"]["PARTY"] = ( CB_PartyPlayers:GetChecked() == 1)
 
     return invites
 end
@@ -29,23 +20,19 @@ end
 function isInviteFormEmpty()
     local isEmpty = true
 
-    if (_G["invites"]["channels"]["GUILD"] == true) then
+    if (NOTSVPC["invites"]["channels"]["GUILD"] == true) then
         isEmpty = false
-        print("z")
     end
 
     -- Envoie le message d'invitation approprié
-    if UnitInRaid("PLAYER") == 1 and _G["invites"]["channels"]["RAID"] then
+    if UnitInRaid("PLAYER") == 1 and NOTSVPC["invites"]["channels"]["RAID"] then
         isEmpty = false
-        print("a")
-    elseif _G["invites"]["channels"]["PARTY"] then
+    elseif NOTSVPC["invites"]["channels"]["PARTY"] then
         isEmpty = false
-        print("b")
     end
 
-    if (sizeof(_G["invites"]["players"]) > 0) then
+    if (sizeof(NOTSVPC["invites"]["players"]) > 0) then
         isEmpty = false
-        print("c")
     end
 
     print("isInviteFormEmpty : " .. tostring(isEmpty))
@@ -56,21 +43,21 @@ end
 function sendInvites(invites, gamekey)
     local inviteSend = false
 
-    if (_G["invites"]["channels"]["GUILD"] == true) then
+    if (NOTSVPC["invites"]["channels"]["GUILD"] == true) then
         SendAddonMessage(PREFIX, "invite", "GUILD")
         inviteSend = true
     end
 
     -- Envoie le message d'invitation approprié
-    if UnitInRaid("PLAYER") == 1 and _G["invites"]["channels"]["RAID"] then
+    if UnitInRaid("PLAYER") == 1 and NOTSVPC["invites"]["channels"]["RAID"] then
         SendAddonMessage(PREFIX, "invite", "RAID")
         inviteSend = true
-    elseif _G["invites"]["channels"]["PARTY"] then
+    elseif NOTSVPC["invites"]["channels"]["PARTY"] then
         SendAddonMessage(PREFIX, "invite", "PARTY")
         inviteSend = true
     end
 
-    for i, player in ipairs(_G["invites"]["players"]) do
+    for i, player in ipairs(NOTSVPC["invites"]["players"]) do
         SendAddonMessage(PREFIX, "invite", "WHISPER", player)
         inviteSend = true
     end
@@ -78,38 +65,29 @@ function sendInvites(invites, gamekey)
     return inviteSend
 end
 
-function clearInviteList()
-    for i = 1, sizeof(_G["invites"]["players"]) do
-        table.remove(_G["invites"]["players"], i)
-        _G["FS_InvitedPlayerListItem" .. i]:SetText("")
-    end
-
-    toggleInviteSubmitButton()
-end
-
 function checkInvitationAccept(player)
     player = normalizePlayerName(player)
     local valid = false
 
     -- Has been invited
-    if (array_search(get_storage("invites")["players"], player) ~= nil) then
+    if (array_search(NOTSVPC["invites"]["players"], player) ~= nil) then
         valid = true
     end
 
-    if get_storage("invites")["channels"]["GUILD"] == true and GetGuildInfo(player) == GetGuildInfo("player") then
+    if NOTSVPC["invites"]["channels"]["GUILD"] == true and GetGuildInfo(player) == GetGuildInfo("player") then
         valid = true
     end
 
-    if UnitInRaid("player") == 1 and get_storage("invites")["channels"]["RAID"] == true then
+    if UnitInRaid("player") == 1 and NOTSVPC["invites"]["channels"]["RAID"] == true then
         valid = true
     end
 
-    if get_storage("invites")["channels"]["PARTY"] == true and UnitInParty(player) == 1 then
+    if NOTSVPC["invites"]["channels"]["PARTY"] == true and UnitInParty(player) == 1 then
         valid = true
     end
 
     -- Already participating
-    if (array_search(_G["participants"], player) ~= nil) then
+    if (array_search(NOTSVPC["participants"], player) ~= nil) then
         valid = false
     end
 

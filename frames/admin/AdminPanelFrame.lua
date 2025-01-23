@@ -1,3 +1,11 @@
+-- Functions
+function AdminPanelFrame_ClearList()
+    UI_ClearList("FS_ParticipantsListItem")
+
+    InviteFrame_ToggleSubmitButton()
+end
+
+-- Events
 function B_StartEvent_OnClick(self)
     print("Button " .. self:GetName() .. " is pressed")
 
@@ -9,9 +17,11 @@ function B_PauseEvent_OnClick(self)
 end
 
 function B_StopEvent_OnClick(self)
-    clear_storage("invites")
+    reset_storage()
 
-    _G["participants"] = {}
+    AdminPanelFrame_ClearList()
+
+    NOTSVPC["participants"] = {}
 
     F_AdminPanel:Hide()
 
@@ -21,15 +31,16 @@ end
 function B_KeyApply_OnClick(self)
     displayMissions(parseEventKey(EB_EventKey:GetText()))
 
-    --  set_storage("event_key", EB_EventKey:GetText())
+    --  NOTSVPC["event_key"] = EB_EventKey:GetText()
 end
 
 function B_SendAlertToPlayers_OnClick(self)
     print("Button " .. self:GetName() .. " is pressed with input : " .. EB_AlertToPlayers:GetText())
+    EB_AlertToPlayers:SetText("")
 end
 
 function displayParticipants()
-    displayList(SF_ParticipantsList, _G["participants"])
+    displayList(SF_ParticipantsList, NOTSVPC["participants"])
 end
 
 function parseEventKey(eventKey)
@@ -87,6 +98,10 @@ function parseEventKey(eventKey)
 end
 
 function displayMissions(event)
+    if (event == nil) then
+        return
+    end
+
     -- Traitement des missions
     local mod = function(l, i)
         -- Définit le texte avec le nom du joueur en rose et le reste en couleur standard
@@ -128,21 +143,7 @@ function displayList(sf_element, values, modifier)
     local scrollChild = sf_element:GetScrollChild()
     scrollChild.contentHeight = 0
 
-    -- Supprime les lignes précédentes
-    local i = 1
-
-    while true do
-        local line_name = "FS_" .. SF_MissionsList:GetName():sub(4) .. "Item" .. i
-        local line = _G[line_name]
-
-        if (line == nil) then
-            break
-        else
-            line:SetText("")
-        end
-
-        i = i + 1
-    end
+    UI_ClearList("FS_" .. SF_MissionsList:GetName():sub(4) .. "Item")
 
     -- Ajoute les nouvelles lignes
     for i, text in ipairs(values) do

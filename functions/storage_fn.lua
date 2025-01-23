@@ -1,13 +1,26 @@
-NOTSVPC = {}
+function reset_storage()
+    NOTSVPC = {}
 
-function set_storage(key, value)
-    NOTSVPC[key] = value
+    NOTSVPC["hasInvited"] = false
+
+    NOTSVPC["participants"] = {}
+
+    NOTSVPC["invites"] = {}
+    NOTSVPC["invites"]["channels"] = {}
+    NOTSVPC["invites"]["players"] = {}
+
+    NOTSVPC["invites"]["channels"]["GUILD"] = false
+    NOTSVPC["invites"]["channels"]["RAID"] = false
+    NOTSVPC["invites"]["channels"]["PARTY"] = false
 end
 
-function get_storage(key)
-    return NOTSVPC[key]
-end
+local frame = CreateFrame("Frame")
+frame:SetScript("OnEvent", function(self, event, ...)
+  if event == "ADDON_LOADED" then
+    if (NOTSVPC == nil) then
+        reset_storage()
+    end
+  end
+end)
 
-function clear_storage(key)
-    set_storage(key, nil)
-end
+frame:RegisterEvent("ADDON_LOADED")
