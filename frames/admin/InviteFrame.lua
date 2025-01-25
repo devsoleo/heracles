@@ -37,7 +37,7 @@ function InviteFrame_DisplayInviteList()
         return
     end
 
-    displayList(SF_InvitedPlayerList, NOTSVPC["invites"]["players"])
+    UI_DisplayList(SF_InvitedPlayerList, NOTSVPC["invites"]["players"])
 end
 
 -- Data Functions

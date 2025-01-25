@@ -213,29 +213,35 @@
 		</Scripts>
 	</Frame>
 	<ScrollFrame name="SF_InvitedPlayerList" inherits="UIPanelScrollFrameTemplate" parent="F_Invite">
-		<Size x="180" y="124" />
+		<Size x="180" y="125" />
 		<Anchors>
-			<Anchor x="-10" y="50" point="BOTTOM" relativeTo="F_Invite" />
+				<Anchor x="-10" y="50" point="BOTTOM" relativeTo="F_Invite" />
 		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true">
+				</Texture>
+			</Layer>
+		</Layers>
+		<ScrollChild>
+			<Frame>
+				<Size x="180" y="20" />
+
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture setAllPoints="true">
+
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+		</ScrollChild>
 		<Scripts>
-			<OnLoad>
-				local scrollChild = CreateFrame("Frame", "$parentScrollChild", SF_InvitedPlayerList)
-				SF_InvitedPlayerList:SetScrollChild(scrollChild)
-				scrollChild:SetSize(180, 1)
-				scrollChild.contentHeight = 0
-			</OnLoad>
 			<OnShow>
 				getInviteForm()
 				InviteFrame_ClearList()
 				InviteFrame_DisplayInviteList()
 			</OnShow>
 		</Scripts>
-		<Backdrop bgFile="Interface\FriendsFrame\UI-Toast-Background" edgeFile="Interface\FriendsFrame\UI-Toast-Border">
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5" />
-			</BackgroundInsets>
-			<TileSize val="12" />
-			<EdgeSize val="12" />
-		</Backdrop>
 	</ScrollFrame>
 </Ui>

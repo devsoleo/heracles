@@ -45,7 +45,7 @@ function B_SendAlertToPlayers_OnClick(self)
 end
 
 function displayParticipants()
-    displayList(SF_ParticipantsList, NOTSVPC["participants"])
+    UI_DisplayList(SF_ParticipantsList, NOTSVPC["participants"])
 end
 
 function parseEventKey(eventKey)
@@ -135,48 +135,6 @@ function displayMissions(event)
 
     for i = 1, sizeof(event["missions"]) do r[i] = "" end
 
-    displayList(SF_MissionsList, r, mod)
+    UI_DisplayList(SF_MissionsList, r, mod)
     -- print("[ADMIN] Missions ajoutées !")
-end
-
--- Fonction de base pour afficher une liste de texte dans un scrollframe
-function displayList(sf_element, values, modifier)
-    if modifier == nil then
-        modifier = function(l) return l end
-    end
-
-    local scrollChild = sf_element:GetScrollChild()
-    scrollChild.contentHeight = 0
-
-    UI_ClearList("FS_" .. SF_MissionsList:GetName():sub(4) .. "Item")
-
-    -- Ajoute les nouvelles lignes
-    for i, text in ipairs(values) do
-        local line_name = "FS_" .. sf_element:GetName():sub(4) .. "Item" .. i
-        local line = _G[line_name]
-
-        if (not line) then
-            line = scrollChild:CreateFontString(line_name, "ARTWORK", "GameFontNormal")
-        end
-
-        line:SetParent(sf_element)
-
-        -- Crée une nouvelle ligne de texte
-        local yPos = -scrollChild.contentHeight - 5
-        line:SetPoint("TOPLEFT", scrollChild, "TOPLEFT", 5, yPos)
-
-        -- Définit le texte avec le nom du joueur en rose et le reste en couleur standard
-        line:SetText("|c00ff00ff" .. text)
-
-        line = modifier(line, i)
-
-        -- Met à jour la hauteur du contenu et du scrolling child
-        scrollChild.contentHeight = scrollChild.contentHeight + 18
-        scrollChild:SetHeight(scrollChild.contentHeight)
-
-        -- Met à jour la barre de défilement si elle existe
-        if sf_element.ScrollBar then
-            sf_element.ScrollBar:SetMinMaxValues(1, scrollChild.contentHeight)
-        end
-    end
 end
