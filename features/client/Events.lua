@@ -19,7 +19,7 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
                 button1 = "Accepter",
                 button2 = "Refuser",
                 OnAccept = function()
-                    SendAddonMessage(PREFIX, "accept_invite", "WHISPER", sender)
+                    SendAddonMessage(PREFIX, "accept_invite^" .. GetLocale(), "WHISPER", sender)
                     print("[CLIENT] Invitation acceptée !", PREFIX)
                 end,
                 timeout = 60,
@@ -43,9 +43,10 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
         }
 
         StaticPopup_Show("ALERT")
-        elseif (messageType == "start") then
-            SendAddonMessage(PREFIX, "accept_start", "WHISPER", sender)
-        end
+    elseif (messageType == "start") then
+        SendAddonMessage(PREFIX, "accept_start", "WHISPER", sender)
+        print("Recu !")
+    end
 
     lastInvite = time()
 end)

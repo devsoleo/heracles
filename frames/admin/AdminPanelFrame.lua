@@ -1,18 +1,12 @@
--- Functions
-function AdminPanelFrame_ClearList()
-    UI_ClearList("FS_ParticipantsListItem")
-
-    InviteFrame_ToggleSubmitButton()
-end
-
 -- Events
 function B_StartEvent_OnClick(self)
     print("Button " .. self:GetName() .. " is pressed")
 
     setInterval(5, 0.5, function()
-        for p, status in pairs(NOTSVPC["admin"]["participants"]) do
-            if (status == false) then
-                SendAddonMessage(PREFIX, "start^key", "WHISPER", p)
+        for name, args in pairs(NOTSVPC["admin"]["participants"]) do
+            print(name, args["status"])
+            if (args["status"] == 0) then
+                SendAddonMessage(PREFIX, "start^key", "WHISPER", name)
             end
         end
     end)
@@ -25,9 +19,10 @@ end
 function B_StopEvent_OnClick(self)
     format_storage()
 
-    AdminPanelFrame_ClearList()
+    UI_ClearList("FS_ParticipantsListItem")
+    UI_ClearList("FS_MissionsListItem")
 
-    NOTSVPC["admin"]["participants"] = {}
+    InviteFrame_ToggleSubmitButton()
 
     F_AdminPanel:Hide()
 
@@ -38,6 +33,8 @@ function B_KeyApply_OnClick(self)
     NOTSVPC["admin"]["event"]["key"] = EB_EventKey:GetText()
 
     displayMissions(NOTSVPC["admin"]["event"]["key"])
+
+    B_StartEvent:Enable()
 end
 
 function B_SendAlertToPlayers_OnClick(self)
@@ -48,8 +45,8 @@ function B_SendAlertToPlayers_OnClick(self)
         return
     end
 
-    for p, status in pairs(NOTSVPC["admin"]["participants"]) do
-        SendAddonMessage(PREFIX, "alert^" .. EB_AlertToPlayers:GetText(), "WHISPER", p) -- TODO : Verifier cooldown
+    for name, args in pairs(NOTSVPC["admin"]["participants"]) do
+        SendAddonMessage(PREFIX, "alert^" .. EB_AlertToPlayers:GetText(), "WHISPER", name) -- TODO : Verifier cooldown
     end
 
     EB_AlertToPlayers:SetText("")
@@ -58,8 +55,8 @@ end
 function displayParticipants()
     local pa = {}
 
-    for i, p in pairs(NOTSVPC["admin"]["participants"]) do
-        table.insert(pa, i)
+    for name, args in pairs(NOTSVPC["admin"]["participants"]) do
+        table.insert(pa, name .. " |c00ffd100 [" .. args["locale"] .. "]|r")
     end
 
     UI_DisplayList(SF_ParticipantsList, pa)
@@ -87,19 +84,9 @@ function parseEventKey(eventKey)
     -- Traitement des headers
     event["headers"] = {}
 
-    local langHeader = str_split(headersList[1], "&&")
-    local langId = 1 -- enUS en langue par défaut
+    event["headers"]["version"] = headersList[1]
 
-    for i, text in ipairs(langHeader) do
-        if text == GetLocale() then
-            langId = i
-        end
-    end
-
-    event["headers"]["lang"] = langId
-    event["headers"]["version"] = headersList[2]
-
-    -- Traitement des headers
+    -- Traitement des missions
     event["missions"] = {}
 
     for i, m in ipairs(missionsList) do
@@ -132,25 +119,26 @@ function displayMissions(event)
     -- Traitement des missions
     local mod = function(l, i)
         -- Définit le texte avec le nom du joueur en rose et le reste en couleur standard
+        local localeId = get_locale_id(GetLocale())
+
         local text = ""
-        local langId = event["headers"]["lang"]
         local m_type = event["missions"][i]["type"]
         local splited_key = event["missions"][i]["args"]
 
         -- 1 + arg_id + lang_id
         if (m_type == "K") then
-            text = "Kill |c000fff00x" .. splited_key[1] .. " " .. splited_key[1 + langId] .. "|r"
+            text = "Kill |c000fff00x" .. splited_key[1] .. " " .. splited_key[1 + localeId]
         elseif (m_type == "T") then
-            if (array_size(splited_key) == 2) then -- Si c'est un player name
+            if (array_size(splited_key) == 1) then -- Si c'est un player name
                 text = "Target |c000fff00" .. splited_key[1]
             else
-                text = "Target |c000fff00" .. splited_key[langId]
+                text = "Target |c000fff00" .. splited_key[localeId]
             end
         elseif (m_type == "G") then
-            text = "Go to |c000fff00" .. splited_key[langId]
+            text = "Go to |c000fff00" .. splited_key[localeId]
         end
 
-        l:SetText(text)
+        l:SetText(text .. "|r")
     end
 
     local r = {}

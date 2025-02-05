@@ -50,31 +50,47 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
         return
     end
 
-    local splitedMessage = str_split(message, "&&")
+    -- Les messages échangés entre le client et l'admin sont separés par des ^ afin de ne pas
+    -- interferer avec les events keys (qui utilisent &&) lors de leur traitement
+    local splitedMessage = str_split(message, "^")
     local messageType = splitedMessage[1]
 
-    -- VERIFIER SI LE JOUEUR A ETE INVITE EN VERIFIANT SI IL CORRESPOND AU FILTRES
     if (messageType == "accept_invite") then
+        -- Si aucun event n'est en cours alors on refuse les "accept_invite" par défaut
+        if NOTSVPC["admin"]["eventStatus"] == 0 then
+            return
+        end
+
         if checkInvitationAccept(sender) == false then
-            -- Ce joueur n'a pas été invité
-            print("[ADMIN] " .. sender .. " n'a pas été invité mais essaie de rejoindre !")
+            print("[ADMIN] " .. sender .. " n'a pas été invité mais essaie de rejoindre !") -- avec /joinevent <admin-player>
             return
         end
 
         print("[ADMIN] " .. sender .. " a accepté votre invitation !")
 
-        -- Add player to the event player list
-        -- table.insert(NOTSVPC["admin"]["participants"], sender)
-        NOTSVPC["admin"]["participants"][sender] = false
+        -- Ajout du joueur à la liste des participants, avec commande langue par defaut "enUS"
+
+        local userLocale = "enUS"
+
+        if is_locale_supported(splitedMessage[2]) then
+            userLocale = splitedMessage[2]
+        end
+
+        NOTSVPC["admin"]["participants"][sender] = {}
+        NOTSVPC["admin"]["participants"][sender]["locale"] = userLocale
+        NOTSVPC["admin"]["participants"][sender]["status"] = 0
 
         displayParticipants()
     elseif (messageType == "accept_start") then
-        if checkInvitationAccept(sender) == false then
-            -- Ce joueur n'a pas été invité
-            print("[ADMIN] " .. sender .. " n'a pas été invité mais essaie de rejoindre !")
+        -- Si aucun event n'est en cours alors on refuse les "accept_invite" par défaut
+        if NOTSVPC["admin"]["eventStatus"] == 0 then
             return
         end
 
-        NOTSVPC["admin"]["participants"][sender] = true
+        if checkInvitationAccept(sender) == false then
+            return
+        end
+
+        NOTSVPC["admin"]["participants"][sender]["status"] = 1
     end
 end)

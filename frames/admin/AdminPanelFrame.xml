@@ -76,6 +76,11 @@
 					<OnClick>
 						B_StartEvent_OnClick(self)
 					</OnClick>
+					<OnShow>
+						if (sizeof(NOTSVPC["admin"]["event"]["missions"]) == 0) then
+							self:Disable()
+						end
+					</OnShow>
 				</Scripts>
 			</Button>
 			<Button name="B_PauseEvent" inherits="UIPanelButtonTemplate" text="Pause">
@@ -87,6 +92,9 @@
 					<OnClick>
 						B_PauseEvent_OnClick(self)
 					</OnClick>
+					<OnLoad>
+						self:Disable()
+					</OnLoad>
 				</Scripts>
 			</Button>
 			<Button name="B_StopEvent" inherits="UIPanelButtonTemplate" text="Stop">
@@ -144,7 +152,7 @@
 				<Scripts>
 					<OnShow>
 						-- TODO : Remove this line later
-						self:SetText("JTVCZW5VUyUyNiUyNmZyRlIlMjYlMjZlc0VTJTI2JTI2ZGVERSUzQjIuMC4wJTVEJTVCSyUyNiUyNjElMjYlMjZGbGVzaCUyMEVhdGVyJTI2JTI2RCVDMyVBOXZvcmV1ciUyNiUyNkNvbWVjYXJuZXMlMjYlMjZGbGVpc2NoZnJlc3NlciUyNiUzQlQlMjYlMjZaZ3VydCUyNiUzQkclMjYlMjZCYWRsYW5kcyUyNiUyNlRlcnJlcyUyMGluZ3JhdGVzJTI2JTI2VGllcnJhcyUyMEluaCVDMyVCM3NwaXRhcyUyNiUyNiVDMyU5NmRsYW5kJTI2JTI2TGV0aGxvciUyMFJhdmluZSUyNiUyNlJhdmluJTIwZGUlMjBMZXRobG9yJTI2JTI2QmFycmFuY28lMjBMZXRobG9yJTI2JTI2RGllJTIwTGV0aGxvcmtsYW1tJTI2JTVE")
+						self:SetText("JTVCMi4wLjAlNUQlNUJLJTI2JTI2MSUyNiUyNkZsZXNoJTIwRWF0ZXIlMjYlMjZEJUMzJUE5dm9yZXVyJTI2JTI2Q29tZWNhcm5lcyUyNiUyNkZsZWlzY2hmcmVzc2VyJTI2JTNCVCUyNiUyNlpndXJ0JTI2JTNCRyUyNiUyNkJhZGxhbmRzJTI2JTI2VGVycmVzJTIwaW5ncmF0ZXMlMjYlMjZUaWVycmFzJTIwSW5oJUMzJUIzc3BpdGFzJTI2JTI2JUMzJTk2ZGxhbmQlMjYlMjZMZXRobG9yJTIwUmF2aW5lJTI2JTI2UmF2aW4lMjBkZSUyMExldGhsb3IlMjYlMjZCYXJyYW5jbyUyMExldGhsb3IlMjYlMjZEaWUlMjBMZXRobG9ya2xhbW0lMjYlNUQ=")
 
 						if NOTSVPC["admin"]["event"]["key"] then
 							-- self:SetText(NOTSVPC["admin"]["event"]["key"])
