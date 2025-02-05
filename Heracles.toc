@@ -12,17 +12,19 @@ libs\base64.lua
 functions\system_fn.lua
 functions\string_fn.lua
 functions\array_fn.lua
+functions\locale_fn.lua
 functions\player_fn.lua
 functions\guild_fn.lua
 functions\storage_fn.lua
 functions\ui_fn.lua
 
 # features : admin
+features\admin\Invites.lua
 features\admin\Commands.lua
 features\admin\Events.lua
-features\admin\Invites.lua
 
 # features : client
+features\client\Commands.lua
 features\client\Events.lua
 
 # frames : admin

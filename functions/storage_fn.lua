@@ -2,11 +2,13 @@ function format_storage()
     NOTSVPC = {}
     NOTSVPC["admin"] = {}
 
-    NOTSVPC["admin"]["hasInvited"] = false
+    NOTSVPC["admin"]["eventStatus"] = 0
 
     NOTSVPC["admin"]["participants"] = {}
     NOTSVPC["admin"]["event"] = {}
     NOTSVPC["admin"]["event"]["key"] = ""
+    NOTSVPC["admin"]["event"]["headers"] = {}
+    NOTSVPC["admin"]["event"]["missions"] = {}
 
     NOTSVPC["admin"]["invites"] = {}
     NOTSVPC["admin"]["invites"]["channels"] = {}

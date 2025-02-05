@@ -101,8 +101,9 @@ function sendInvites()
 end
 
 function checkInvitationAccept(player)
-    player = normalizePlayerName(player)
     local valid = false
+
+    player = normalizePlayerName(player)
 
     -- Has been invited
     if (array_search(NOTSVPC["admin"]["invites"]["players"], player) ~= nil) then
@@ -171,7 +172,7 @@ end
 
 function B_SubmitInvites_OnClick(self)
     if (sendInvites()) then
-        NOTSVPC["admin"]["hasInvited"] = true
+        NOTSVPC["admin"]["eventStatus"] = 1
 
         F_Invite:Hide()
         F_AdminPanel:Show()
