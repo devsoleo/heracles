@@ -9,7 +9,13 @@ end
 function B_StartEvent_OnClick(self)
     print("Button " .. self:GetName() .. " is pressed")
 
-    print(invites["channels"]["GUILD"])
+    setInterval(5, 0.5, function()
+        for p, status in pairs(NOTSVPC["admin"]["participants"]) do
+            if (status == false) then
+                SendAddonMessage(PREFIX, "start^key", "WHISPER", p)
+            end
+        end
+    end)
 end
 
 function B_PauseEvent_OnClick(self)
@@ -17,11 +23,11 @@ function B_PauseEvent_OnClick(self)
 end
 
 function B_StopEvent_OnClick(self)
-    reset_storage()
+    format_storage()
 
     AdminPanelFrame_ClearList()
 
-    NOTSVPC["participants"] = {}
+    NOTSVPC["admin"]["participants"] = {}
 
     F_AdminPanel:Hide()
 
@@ -29,23 +35,34 @@ function B_StopEvent_OnClick(self)
 end
 
 function B_KeyApply_OnClick(self)
-    displayMissions(parseEventKey(EB_EventKey:GetText()))
+    NOTSVPC["admin"]["event"]["key"] = EB_EventKey:GetText()
 
-    --  NOTSVPC["event_key"] = EB_EventKey:GetText()
+    displayMissions(NOTSVPC["admin"]["event"]["key"])
 end
 
 function B_SendAlertToPlayers_OnClick(self)
     print("Button " .. self:GetName() .. " is pressed with input : " .. EB_AlertToPlayers:GetText())
 
-    for i, p in ipairs(NOTSVPC["participants"]) do
-        SendAddonMessage(PREFIX, "alert|" .. EB_AlertToPlayers:GetText(), "WHISPER", p) -- TODO : Verifier cooldown
+    if (EB_AlertToPlayers:GetText() == "") then
+        -- No message
+        return
+    end
+
+    for p, status in pairs(NOTSVPC["admin"]["participants"]) do
+        SendAddonMessage(PREFIX, "alert^" .. EB_AlertToPlayers:GetText(), "WHISPER", p) -- TODO : Verifier cooldown
     end
 
     EB_AlertToPlayers:SetText("")
 end
 
 function displayParticipants()
-    UI_DisplayList(SF_ParticipantsList, NOTSVPC["participants"])
+    local pa = {}
+
+    for i, p in pairs(NOTSVPC["admin"]["participants"]) do
+        table.insert(pa, i)
+    end
+
+    UI_DisplayList(SF_ParticipantsList, pa)
 end
 
 function parseEventKey(eventKey)
@@ -70,7 +87,7 @@ function parseEventKey(eventKey)
     -- Traitement des headers
     event["headers"] = {}
 
-    local langHeader = str_split(headersList[1], "|")
+    local langHeader = str_split(headersList[1], "&&")
     local langId = 1 -- enUS en langue par défaut
 
     for i, text in ipairs(langHeader) do
@@ -86,7 +103,7 @@ function parseEventKey(eventKey)
     event["missions"] = {}
 
     for i, m in ipairs(missionsList) do
-        local mission = str_split(m, "|")
+        local mission = str_split(m, "&&")
 
         event["missions"][i] = {}
         event["missions"][i]["args"] = {}
@@ -99,13 +116,18 @@ function parseEventKey(eventKey)
         end
     end
 
+    NOTSVPC["admin"]["event"]["missions"] = event["missions"]
+    NOTSVPC["admin"]["event"]["headers"] = event["headers"]
+
     return event
 end
 
 function displayMissions(event)
-    if (event == nil) then
+    if (event == nil or event == "") then
         return
     end
+
+    event = parseEventKey(event)
 
     -- Traitement des missions
     local mod = function(l, i)

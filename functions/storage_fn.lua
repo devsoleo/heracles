@@ -1,24 +1,27 @@
-function reset_storage()
+function format_storage()
     NOTSVPC = {}
+    NOTSVPC["admin"] = {}
 
-    NOTSVPC["hasInvited"] = false
+    NOTSVPC["admin"]["hasInvited"] = false
 
-    NOTSVPC["participants"] = {}
+    NOTSVPC["admin"]["participants"] = {}
+    NOTSVPC["admin"]["event"] = {}
+    NOTSVPC["admin"]["event"]["key"] = ""
 
-    NOTSVPC["invites"] = {}
-    NOTSVPC["invites"]["channels"] = {}
-    NOTSVPC["invites"]["players"] = {}
+    NOTSVPC["admin"]["invites"] = {}
+    NOTSVPC["admin"]["invites"]["channels"] = {}
+    NOTSVPC["admin"]["invites"]["players"] = {}
 
-    NOTSVPC["invites"]["channels"]["GUILD"] = false
-    NOTSVPC["invites"]["channels"]["RAID"] = false
-    NOTSVPC["invites"]["channels"]["PARTY"] = false
+    NOTSVPC["admin"]["invites"]["channels"]["GUILD"] = false
+    NOTSVPC["admin"]["invites"]["channels"]["RAID"] = false
+    NOTSVPC["admin"]["invites"]["channels"]["PARTY"] = false
 end
 
 local frame = CreateFrame("Frame")
 frame:SetScript("OnEvent", function(self, event, ...)
   if event == "ADDON_LOADED" then
     if (NOTSVPC == nil) then
-        reset_storage()
+        format_storage()
     end
   end
 end)

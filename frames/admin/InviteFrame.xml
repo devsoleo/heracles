@@ -191,7 +191,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						reset_storage()
+						format_storage()
 						InviteFrame_ClearList()
 					</OnClick>
 				</Scripts>

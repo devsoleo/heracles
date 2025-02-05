@@ -8,7 +8,7 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
         return
     end
 
-    local splitedMessage = str_split(message, "|")
+    local splitedMessage = str_split(message, "^")
     local messageType = splitedMessage[1]
 
     -- Same invite
@@ -43,7 +43,9 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
         }
 
         StaticPopup_Show("ALERT")
-    end
+        elseif (messageType == "start") then
+            SendAddonMessage(PREFIX, "accept_start", "WHISPER", sender)
+        end
 
     lastInvite = time()
 end)
