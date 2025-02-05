@@ -50,21 +50,31 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
         return
     end
 
-    local splitedMessage = str_split(message, "|")
+    local splitedMessage = str_split(message, "&&")
     local messageType = splitedMessage[1]
 
     -- VERIFIER SI LE JOUEUR A ETE INVITE EN VERIFIANT SI IL CORRESPOND AU FILTRES
     if (messageType == "accept_invite") then
         if checkInvitationAccept(sender) == false then
             -- Ce joueur n'a pas été invité
+            print("[ADMIN] " .. sender .. " n'a pas été invité mais essaie de rejoindre !")
             return
         end
 
         print("[ADMIN] " .. sender .. " a accepté votre invitation !")
 
         -- Add player to the event player list
-        table.insert(NOTSVPC["participants"], sender)
+        -- table.insert(NOTSVPC["admin"]["participants"], sender)
+        NOTSVPC["admin"]["participants"][sender] = false
 
         displayParticipants()
+    elseif (messageType == "accept_start") then
+        if checkInvitationAccept(sender) == false then
+            -- Ce joueur n'a pas été invité
+            print("[ADMIN] " .. sender .. " n'a pas été invité mais essaie de rejoindre !")
+            return
+        end
+
+        NOTSVPC["admin"]["participants"][sender] = true
     end
 end)

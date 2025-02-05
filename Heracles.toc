@@ -9,6 +9,7 @@ libs\url.lua
 libs\base64.lua
 
 # functions
+functions\system_fn.lua
 functions\string_fn.lua
 functions\array_fn.lua
 functions\player_fn.lua

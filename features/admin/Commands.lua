@@ -6,7 +6,7 @@ function SlashCmdList.EVENT(msg, editBox)
         F_AdminPanel:Hide()
         F_Invite:Hide()
     else
-        if (NOTSVPC["hasInvited"] == false) then
+        if (NOTSVPC["admin"]["hasInvited"] == false) then
             F_Invite:Show()
         else
             F_AdminPanel:Show()

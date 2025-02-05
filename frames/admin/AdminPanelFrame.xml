@@ -144,10 +144,10 @@
 				<Scripts>
 					<OnShow>
 						-- TODO : Remove this line later
-						self:SetText("JTVCZW5VUyU3Q2ZyRlIlN0Nlc0VTJTdDZGVERSUzQjIuMC4wJTVEJTVCSyU3QzElN0NLb2JvbGQlMjBWZXJtaW4lN0NWZXJtaW5lJTIwa29ib2xkJTdDQWxpbWElQzMlQjFhJTIwayVDMyVCM2JvbGQlN0NLb2JvbGRnZXolQzMlQkNjaHQlM0JUJTdDRmxlc2glMjBFYXRlciU3Q0QlQzMlQTl2b3JldXIlN0NDb21lY2FybmVzJTdDRmxlaXNjaGZyZXNzZXIlM0JHJTdDU3Rvcm13aW5kJTIwQ2l0eSU3Q0h1cmxldmVudCU3Q0NpdWRhZCUyMGRlJTIwVmVudG9ybWVudGElN0NTdHVybXdpbmQlN0NUcmFkZSUyMERpc3RyaWN0JTdDUXVhcnRpZXIlMjBjb21tZXIlQzMlQTdhbnQlN0NEaXN0cml0byUyMGRlJTIwTWVyY2FkZXJlcyU3Q0hhbmRlbHNkaXN0cmlrdCU1RA==")
+						self:SetText("JTVCZW5VUyUyNiUyNmZyRlIlMjYlMjZlc0VTJTI2JTI2ZGVERSUzQjIuMC4wJTVEJTVCSyUyNiUyNjElMjYlMjZGbGVzaCUyMEVhdGVyJTI2JTI2RCVDMyVBOXZvcmV1ciUyNiUyNkNvbWVjYXJuZXMlMjYlMjZGbGVpc2NoZnJlc3NlciUyNiUzQlQlMjYlMjZaZ3VydCUyNiUzQkclMjYlMjZCYWRsYW5kcyUyNiUyNlRlcnJlcyUyMGluZ3JhdGVzJTI2JTI2VGllcnJhcyUyMEluaCVDMyVCM3NwaXRhcyUyNiUyNiVDMyU5NmRsYW5kJTI2JTI2TGV0aGxvciUyMFJhdmluZSUyNiUyNlJhdmluJTIwZGUlMjBMZXRobG9yJTI2JTI2QmFycmFuY28lMjBMZXRobG9yJTI2JTI2RGllJTIwTGV0aGxvcmtsYW1tJTI2JTVE")
 
-						if NOTSVPC["event_key"] then
-							-- self:SetText(NOTSVPC["event_key"])
+						if NOTSVPC["admin"]["event"]["key"] then
+							-- self:SetText(NOTSVPC["admin"]["event"]["key"])
 						end
 					</OnShow>
 					<OnEnterPressed>
@@ -196,6 +196,11 @@
 				<Size x="250" y="20" />
 			</Frame>
 		</ScrollChild>
+		<Scripts>
+			<OnShow>
+        displayParticipants()
+			</OnShow>
+		</Scripts>
 	</ScrollFrame>
 	<ScrollFrame name="SF_MissionsList" inherits="UIPanelScrollFrameTemplate" parent="F_AdminPanel">
 		<Size x="250" y="250" />
@@ -218,7 +223,7 @@
 			<OnShow>
 				FS_AdminPanelSubTitle:SetText("Event de : " .. UnitName("PLAYER"))
 
-				-- displayMissions(NOTSVPC["event_key"])
+				displayMissions(NOTSVPC["admin"]["event"]["key"])
 			</OnShow>
 		</Scripts>
 	</ScrollFrame>
