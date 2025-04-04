@@ -4,9 +4,32 @@ function B_StartEvent_OnClick(self)
 
     setInterval(5, 0.5, function()
         for name, args in pairs(NOTSVPC["admin"]["participants"]) do
-            print(name, args["status"])
             if (args["status"] == 0) then
-                SendAddonMessage(PREFIX, "start^key", "WHISPER", name)
+                local mission_id = 1
+                local missions = NOTSVPC["admin"]["event"]["missions"]
+                local localeId = get_locale_id(GetLocale())
+                local text = ""
+                local m_type = missions[mission_id]["type"]
+                local splited_key = missions[mission_id]["args"]
+
+                -- 1 + arg_id + lang_id
+                if (m_type == "K") then
+                    text = m_type .. "&&" .. splited_key[1] .. "&&" .. splited_key[1 + localeId]
+                elseif (m_type == "T") then
+                    if (array_size(splited_key) == 1) then -- Si c'est un player name
+                        text = m_type .. "&&" .. splited_key[1]
+                    else
+                        text = m_type .. "&&" .. splited_key[localeId]
+                    end
+                elseif (m_type == "G") then
+                    text = m_type .. "&&" .. splited_key[localeId]
+
+                    if (array_size(splited_key) > 4) then
+                        text = text .. "&&" .. splited_key[5 + localeId]
+                    end
+                end
+
+                SendAddonMessage(PREFIX, "start^" .. text, "WHISPER", name)
             end
         end
     end)
@@ -93,13 +116,30 @@ function parseEventKey(eventKey)
         local mission = str_split(m, "&&")
 
         event["missions"][i] = {}
-        event["missions"][i]["args"] = {}
         event["missions"][i]["type"] = mission[1]
+        event["missions"][i]["args"] = {}
 
-        for j, v in ipairs(mission) do
-            if (j ~= 1) then
-                event["missions"][i]["args"][j - 1] = v
+        -- Traitement des arguments
+        if (mission[1] == "K") then
+            event["missions"][i]["args"]["count"] = mission[2]
+
+            event["missions"][i]["args"]["entity"] = {}
+
+            for j = 1, 4 do
+                event["missions"][i]["args"]["entity"][get_locale_by_id(j)] = mission[2 + j]
             end
+        elseif (mission[1] == "T") then
+            if (array_size(mission) == 2) then
+                event["missions"][i]["args"]["category"] = "player"
+                event["missions"][i]["args"]["entity"] = mission[2]
+            else
+                event["missions"][i]["args"]["category"] = "monster"
+                for j = 1, 4 do
+                    event["missions"][i]["args"]["entity"][get_locale_by_id(j)] = mission[1 + j]
+                end
+            end
+        elseif (mission[1] == "G") then
+
         end
     end
 
