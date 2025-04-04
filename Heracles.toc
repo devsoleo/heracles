@@ -7,6 +7,7 @@
 # libs
 libs\url.lua
 libs\base64.lua
+libs\json.lua
 
 # functions
 functions\system_fn.lua

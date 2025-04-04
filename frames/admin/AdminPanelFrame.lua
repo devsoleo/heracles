@@ -4,9 +4,17 @@ function B_StartEvent_OnClick(self)
 
     setInterval(5, 0.5, function()
         for name, args in pairs(NOTSVPC["admin"]["participants"]) do
-            print(name, args["status"])
             if (args["status"] == 0) then
-                SendAddonMessage(PREFIX, "start^key", "WHISPER", name)
+                local mission_id = 1
+                local missions = NOTSVPC["admin"]["event"]["missions"]
+                local localeId = get_locale_id(GetLocale())
+                local text = ""
+                local m_type = missions[mission_id]["type"]
+                local splited_key = missions[mission_id]["args"]
+
+                -- TODO : make it work
+
+                SendAddonMessage(PREFIX, "start^" .. text, "WHISPER", name)
             end
         end
     end)
@@ -69,44 +77,12 @@ function parseEventKey(eventKey)
         return
     end
 
-    eventKey = url_decode(base64_decode(eventKey))
+    local decodedKey = json_decode(url_decode(base64_decode(eventKey)))
 
-    local event = {}
+    NOTSVPC["admin"]["event"]["missions"] = decodedKey["missions"]
+    NOTSVPC["admin"]["event"]["headers"] = decodedKey["headers"]
 
-    local splitedEventKey = str_split_brackets(eventKey)
-
-    local headers = splitedEventKey[1]
-    local missions = splitedEventKey[2]
-
-    local headersList = str_split(headers, ";")
-    local missionsList = str_split(missions, ";")
-
-    -- Traitement des headers
-    event["headers"] = {}
-
-    event["headers"]["version"] = headersList[1]
-
-    -- Traitement des missions
-    event["missions"] = {}
-
-    for i, m in ipairs(missionsList) do
-        local mission = str_split(m, "&&")
-
-        event["missions"][i] = {}
-        event["missions"][i]["args"] = {}
-        event["missions"][i]["type"] = mission[1]
-
-        for j, v in ipairs(mission) do
-            if (j ~= 1) then
-                event["missions"][i]["args"][j - 1] = v
-            end
-        end
-    end
-
-    NOTSVPC["admin"]["event"]["missions"] = event["missions"]
-    NOTSVPC["admin"]["event"]["headers"] = event["headers"]
-
-    return event
+    return decodedKey
 end
 
 function displayMissions(event)
@@ -122,20 +98,26 @@ function displayMissions(event)
         local localeId = get_locale_id(GetLocale())
 
         local text = ""
-        local m_type = event["missions"][i]["type"]
-        local splited_key = event["missions"][i]["args"]
 
-        -- 1 + arg_id + lang_id
-        if (m_type == "K") then
-            text = "Kill |c000fff00x" .. splited_key[1] .. " " .. splited_key[1 + localeId]
-        elseif (m_type == "T") then
-            if (array_size(splited_key) == 1) then -- Si c'est un player name
-                text = "Target |c000fff00" .. splited_key[1]
+        local mission = event["missions"][i]
+        local category = mission["category"]
+
+        if (category == "kill") then
+            text = "Kill |c000fff00x" .. mission["creature"][GetLocale()]
+        elseif (category == "target") then
+            local entity = mission["entity"]
+
+            if (entity == "player") then -- Si c'est un player name
+                text = "Target |c000fff00" .. mission["name"]
             else
-                text = "Target |c000fff00" .. splited_key[localeId]
+                text = "Target |c000fff00" .. mission["name"][GetLocale()]
             end
-        elseif (m_type == "G") then
-            text = "Go to |c000fff00" .. splited_key[localeId]
+        elseif (category == "goto") then
+            text = "Go to |c000fff00" .. mission["zone"][GetLocale()]
+
+            if (mission["subzone"] ~= nil) then
+                text = text .. ", " .. mission["subzone"][GetLocale()]
+            end
         end
 
         l:SetText(text .. "|r")
@@ -146,5 +128,4 @@ function displayMissions(event)
     for i = 1, sizeof(event["missions"]) do r[i] = "" end
 
     UI_DisplayList(SF_MissionsList, r, mod)
-    -- print("[ADMIN] Missions ajoutées !")
 end
