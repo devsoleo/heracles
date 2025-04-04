@@ -44,8 +44,11 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
 
         StaticPopup_Show("ALERT")
     elseif (messageType == "start") then
+        local mission = splitedMessage[2]
+
+        -- TODO : ajouter au journal
+
         SendAddonMessage(PREFIX, "accept_start", "WHISPER", sender)
-        print("Recu !")
     end
 
     lastInvite = time()

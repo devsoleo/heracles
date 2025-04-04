@@ -61,6 +61,11 @@ onAddonMessage:SetScript("OnEvent", function(self, event, prefix, message, chann
             return
         end
 
+        -- Si le joueur a déjà accepté l'invitation
+        if NOTSVPC["admin"]["participants"][sender] ~= nil then
+            return
+        end
+
         if checkInvitationAccept(sender) == false then
             print("[ADMIN] " .. sender .. " n'a pas été invité mais essaie de rejoindre !") -- avec /joinevent <admin-player>
             return

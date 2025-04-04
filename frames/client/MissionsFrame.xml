@@ -4,7 +4,7 @@
 	</Font>
 	<Alpha toAlpha="1" />
 	<Frame name="MissionsFrame" inherits="BackdropTemplate" movable="true" clampedToScreen="true" clipChildren="true" hidden="false">
-		<Size x="200" y="300" />
+		<Size x="280" y="420" />
 		<Anchors>
 			<Anchor point="CENTER" relativeTo="UIParent" />
 		</Anchors>
@@ -21,12 +21,12 @@
 		</Backdrop>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="ChoosePlayersText" inherits="GameFontNormal" text="Event : X152B12">
+				<!-- <FontString name="ChoosePlayersText" inherits="GameFontNormal" text="Event : X152B12">
 					<Size x="280" y="60" />
 					<Anchors>
 						<Anchor y="-5" point="TOP" />
 					</Anchors>
-				</FontString>
+				</FontString> -->
 			</Layer>
 		</Layers>
 		<Frames>

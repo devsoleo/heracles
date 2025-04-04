@@ -19,3 +19,7 @@ function get_locale_id(locale)
 
     return 1 -- enUS par defaut
 end
+
+function get_locale_by_id(id)
+    return supported_locales[id]
+end
