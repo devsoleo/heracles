@@ -1,0 +1,33 @@
+## Interface: 30300
+## Title: Heracles
+## Version: 2.0.0
+## Author: Soleo, Aniwen
+## SavedVariablesPerCharacter: NOTSVPC
+
+# functions
+functions\string_fn.lua
+functions\array_fn.lua
+functions\player_fn.lua
+functions\guild_fn.lua
+functions\storage_fn.lua
+
+# features : admin
+features\admin\Commands.lua
+features\admin\Events.lua
+features\admin\Invites.lua
+
+# features : client
+features\client\Events.lua
+
+# frames : admin
+frames\admin\InviteFrame.xml
+frames\admin\AdminPanelFrame.xml
+
+# frames : client
+frames\client\MissionsFrame.xml
+
+# frames : global
+frames\MinimapButton.xml
+
+# Entrypoint
+main.lua

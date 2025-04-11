@@ -15,7 +15,7 @@
 		</Backdrop>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="FS_AdminPanelTitle" inherits="GameFontNormalLarge" text="Nuttenh-o-tron : Admin Panel">
+				<FontString name="FS_AdminPanelTitle" inherits="GameFontNormalLarge" text="Heracles : Admin Panel">
 					<Size x="377" y="20" />
 					<Anchors>
 						<Anchor y="-20" point="TOP" />

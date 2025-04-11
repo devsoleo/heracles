@@ -1,8 +1,8 @@
-# Nuttenh-o-tron
+# Heracles
 > This repo holds the under development 2.0.0 version
 
 ## Introduction
-Nuttenh-o-tron is an open-source addon for World of Warcraft (wotlk), designed to create and organize multiplayer events directly within the game.
+Heracles is an open-source addon for World of Warcraft (wotlk), designed to create and organize multiplayer events directly within the game.
 
 **This community project attracted hundreds of players at its launch that's why we're working on a better v2.**
 
@@ -33,10 +33,10 @@ To give you as much freedom as possible in creating your events, we've added lot
 ### 3. New Web UI ✨
 We're also working on the creation of a web interface to facilitate the generation of event keys (representing an event's mission list).
 
-Our tool [nuttenh-o-tron-webui](https://github.com/devsoleo/nuttenh-o-tron-webui) is a side-project that is not scheduled for production. We use it for development, so we share it but we cannot guarantee anything.
+Our tool [heracles-webui](https://gitlab.com/devsoleo/heracles-webui) is a side-project that is not scheduled for production. We use it for development, so we share it but we cannot guarantee anything.
 
 ## Installation
-1. Download the Nuttenh-o-tron repository.
+1. Download the Heracles repository.
 2. Extract the files to your World of Warcraft `Interface/AddOns` folder.
 3. Launch the game and activate the addon in the addon menu.
 
