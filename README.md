@@ -1,4 +1,4 @@
-[![Discord](https://img.shields.io/discord/1070782232219877477?color=7289da&label=Discord&logo=discord&style=for-the-badge)](https://discord.gg/vhs87h6fvD)
+[![Discord](https://img.shields.io/discord/1187474009911206008?color=7289da&label=Discord&logo=discord&style=for-the-badge)](https://discord.gg/vhs87h6fvD)
 
 # Heracles
 > This repo holds the under development 2.0.0 version
